@@ -29,12 +29,15 @@ phi4_15=phi4_13 - deltaphi13_15;
 
 
 % loop closure equations:
+% A-B-C-H-A
 F(1)=r2*cos(phi2)+r3*cos(phi3)-r4_13*cos(phi4_13)-r1_24*cos(phi1_14); %L1X
 F(2)=r2*sin(phi2)+r3*sin(phi3)-r4_13*sin(phi4_13)-r1_24*sin(phi1_14); %L1Y
 
+% H-D-E-F-H
 F(3)=r4_15*cos(phi4_15)+r5*cos(phi5)-r6*cos(phi6)-r1_46*cos(phi1_46); %L2X
 F(4)=r4_15*sin(phi4_15)+r5*sin(phi5)-r6*sin(phi6)-r1_46*sin(phi1_46); %L2Y
 
+% E-F-G-F
 F(5)=r6*cos(phi6)-r7*cos(phi7)-X; %L3X
 F(6)=r6*sin(phi6)-r7*sin(phi7)-h; %L3Y
 

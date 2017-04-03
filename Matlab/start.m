@@ -20,27 +20,29 @@ close all
 
 % program data
 fig_kin_uzuvlu = 1;        % draw figures of kinematic analysis if 1
+fig_kin_check  = 1;        % draw figures of kinematic check if 1
 fig_dyn_uzuvlu = 1;        % draw figures of dynamic analysis if 1
+mov_kin_uzuvlu = 0;        % play the movie of the motion if 1
 
 % kinematic parameters (link lengths)
 
 r2 = 1;
-r3 = 4*r2;
+r3 =2.71*r2;
 
-r1_24 = 2*r2;
-r1_46 = 5*r2;
-h = 1.5*r2;
+r1_24 = 2.24*r2;
+r1_46 = 4.53*r2;
 
-r4_13 = 3*r2;
-r4_35 = r2;
-r4_15 = 3*r2;
+r4_13 = 2.29*r2;
+r4_35 = 1.35*r2;
+r4_15 = 2.29*r2;
 
-r5 = 4*r2;
-r6 = 3*r2;
-r7 = 3*r2;
+r5 = 3.62*r2;
+r6 = 2.24*r2;
+r7 = 2.29*r2;
 
+h = 1.06*r2;
 
-phi1_14 = 0;
+phi1_24 = 0;
 phi1_46 = 0;
 % phi1_68 = atan(h/X);
 
@@ -71,14 +73,14 @@ phi1_46 = 0;
 % VERY IMPORTANT because it determines which branch of the mechanism you're in
 phi3_init = pi*50/180;
 phi4_13_init = pi*80/180;  
-phi5_init = pi*1/18;
+phi5_init = pi*10/180;
 phi6_init = pi*77/180;
 phi7_init = pi*155/180;
-X_init = 3*r2;
+X_init = 2.537*r2;
 
 t_begin = 0;                   % start time of simulation
 t_end = 10;                    % end time of simulation
-Ts = 0.05;                     % time step of simulation
+Ts = 0.005;                     % time step of simulation
 t = [t_begin:Ts:t_end]';       % time vector
 
 % initialization of driver
@@ -89,25 +91,29 @@ ddphi2=0*ones(length(t),1);
 
 % calculation of the kinematics (see kin_4bar.m)
 [phi3,phi4_13,phi5, phi6, phi7, X, dphi3,dphi4_13,dphi5, dphi6, dphi7,dX, ddphi3,ddphi4_13,ddphi5, ddphi6, ddphi7,ddX] = ... 
-            kinematics_uzuvlu(r1_24,r1_46,h,r2,r3,r4_13,r4_15,r4_35,r5,r6,r7,phi1_14,phi1_46,phi2,dphi2,ddphi2,phi3_init,phi4_13_init,phi5_init,phi6_init,phi7_init,X_init,t,fig_kin_uzuvlu);
+            kinematics_uzuvlu(r1_24,r1_46,h,r2,r3,r4_13,r4_15,r4_35,r5,r6,r7,phi1_24,phi1_46,phi2,dphi2,ddphi2,phi3_init,phi4_13_init,phi5_init,phi6_init,phi7_init,X_init,t,fig_kin_uzuvlu);
+
+% verify kinematics (see kin_check.m)     
+[diffphi3,diffphi4_13,diffphi5,diffphi6,diffphi7,diffX,ddiffphi3,ddiffphi4_13,ddiffphi5,ddiffphi6,ddiffphi7,ddiffX] = ...
+    kinematics_check(phi3,phi4_13,phi5,phi6,phi7,X,dphi3,dphi4_13,dphi5,dphi6,dphi7,dX,ddphi3,ddphi4_13,ddphi5,ddphi6,ddphi7,ddX,Ts,fig_kin_check,t);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % STEP 2. Dynamics Calculation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% calculation of the dynamics (see dyn_uzuvlu.m)
-[F_P_x,F_Q_x,F_R_x,F_S_x,F_P_y,F_Q_y,F_R_y,F_S_y,M_P] = ...
-    dynamics_uzuvlu(phi2,phi3,phi4,dphi2,dphi3,dphi4,ddphi2,ddphi3,ddphi4,r2,r3,r4,m2,m3,m4,X2,X3,X4,Y2,Y3,Y4,J2,J3,J4,t,fig_dyn_4bar);
+% % calculation of the dynamics (see dyn_uzuvlu.m)
+% [F_P_x,F_Q_x,F_R_x,F_S_x,F_P_y,F_Q_y,F_R_y,F_S_y,M_P] = ...
+%     dynamics_uzuvlu(phi2,phi3,phi4,dphi2,dphi3,dphi4,ddphi2,ddphi3,ddphi4,r2,r3,r4,m2,m3,m4,X2,X3,X4,Y2,Y3,Y4,J2,J3,J4,t,fig_dyn_4bar);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % STEP 3. Movie
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if mov_kin_8bar
+if mov_kin_uzuvlu
 
     figure
-    load fourbar_movie Movie
+    load uzuvlu_movie Movie
     movie(Movie)
 
 end
